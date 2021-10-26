@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--组件扫描-->
+    <context:component-scan base-package="com.bjpowernode.web" />
+
+    <!--注解驱动-->
+    <mvc:annotation-driven />
+
+    <!--视图解析器：前缀、后缀-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/jsp/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!--静态资源访问支持-->
+    <mvc:default-servlet-handler />
+
+    <!--配置站点入口-->
+    <mvc:view-controller path="/" view-name="redirect:/user/login.html" />
+
+    <!--配置登录权限的拦截器-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <!--不拦截哪些资源-->
+            <mvc:exclude-mapping path="/user/login.html" />
+            <mvc:exclude-mapping path="/user/login.do" />
+            <mvc:exclude-mapping path="/user/login2.do" />
+            <mvc:exclude-mapping path="/static/**" />
+            <bean class="com.bjpowernode.web.interceptor.LoginInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+</beans>
